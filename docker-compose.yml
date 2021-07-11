@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  cryptoapi:
+    build:
+      context: .
+    ports:
+      - 8080:8000
+    volumes:
+      - .:/var/www/html
