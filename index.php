@@ -1,2 +1,3 @@
 <?php
-echo "Добро пожаловать! \n";
+
+require_once 'api/v1.php';
