@@ -17,10 +17,10 @@ class CheckToken
     {
         $headers = null;
         if (isset($_SERVER['Authorization'])) {
-            $headers = trim($_SERVER["Authorization"]);
+            $headers = trim($_SERVER['Authorization']);
         } else {
             if (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
-                $headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
+                $headers = trim($_SERVER['HTTP_AUTHORIZATION']);
             } elseif (function_exists('apache_request_headers')) {
                 $requestHeaders = apache_request_headers();
                 // Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
@@ -37,28 +37,24 @@ class CheckToken
     }
 
     /**
-     * Get access token from header
-     * @return bool|null
+     * @return bool
      */
-    private function getBearerToken(): ?bool
+    private function getBearerToken(): bool
     {
         $headers = $this->getAuthorizationHeader();
         if (!empty($headers)) {
             if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
-                if ($matches[1] == static::getPublicToken()) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return $matches[1] == static::getPublicToken();
             }
         }
-        return null;
+        return false;
     }
 
+
     /**
-     * @return bool|null
+     * @return bool
      */
-    public function checkToken(): ?bool
+    public function checkToken(): bool
     {
         return $this->getBearerToken();
     }
