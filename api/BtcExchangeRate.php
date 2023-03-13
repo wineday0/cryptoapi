@@ -13,7 +13,8 @@ class BtcExchangeRate
     public const BTC_CURRENCY_CODE = 'BTC';
     public const FEE = 1.02;
     private const ENDPOINT = 'https://blockchain.info/ticker';
-    private $rates = [];
+
+    private array $rates = [];
 
     /**
      * @return false|string
@@ -22,11 +23,14 @@ class BtcExchangeRate
     {
         $response = new Response();
         $response->data = $this->rates;
-        return (is_null($this->rates) || count($this->rates) < 1)
+        return empty($this->rates)
             ? $response->getResponseSymbolNotFound()
             : $response->getResponseSuccess();
     }
 
+    /**
+     * @return mixed
+     */
     private function getData()
     {
         $rawData = file_get_contents($this->getEndpoint());
@@ -77,7 +81,7 @@ class BtcExchangeRate
                         'currency_from' => $from,
                         'currency_to' => $to,
                         'value' => $value,
-                        'converted_value' => round($rate->buy * (float)$value * static::FEE, 2),
+                        'converted_value' => round((float)$value * $rate->buy * static::FEE, 2),
                         'rate' => $this->getPreparedPurchasePrice($rate->buy)
                     ];
                 }

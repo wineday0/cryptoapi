@@ -50,7 +50,6 @@ class CheckToken
         return false;
     }
 
-
     /**
      * @return bool
      */
