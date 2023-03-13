@@ -12,7 +12,7 @@ class Response
     public const STATUS_ERROR = 'error';
 
     /** @var int */
-    public int $code = 200;
+    public int $httpStatusCode = 200;
 
     /** @var string */
     public string $message = '';
@@ -48,7 +48,7 @@ class Response
     public function getResponseInvalidValue()
     {
         $this->message = 'Invalid value';
-        $this->code = 400;
+        $this->httpStatusCode = 400;
 
         return $this->getEncodeResponse($this->getBaseResponse());
     }
@@ -59,7 +59,7 @@ class Response
     public function getResponseMethodNotFound()
     {
         $this->message = 'Method not allowed';
-        $this->code = 404;
+        $this->httpStatusCode = 404;
 
         return $this->getEncodeResponse($this->getBaseResponse());
     }
@@ -70,7 +70,7 @@ class Response
     public function getResponseSymbolNotFound()
     {
         $this->message = 'Given Symbol Not Found';
-        $this->code = 404;
+        $this->httpStatusCode = 404;
 
         return $this->getEncodeResponse($this->getBaseResponse());
     }
@@ -81,7 +81,7 @@ class Response
     public function getResponseInvalidToken()
     {
         $this->message = 'Invalid token';
-        $this->code = 401;
+        $this->httpStatusCode = 401;
 
         return $this->getEncodeResponse($this->getBaseResponse());
     }
@@ -92,7 +92,7 @@ class Response
      */
     public function getEncodeResponse(array $response)
     {
-        http_response_code($this->code);
+        http_response_code($this->httpStatusCode);
         return json_encode($response);
     }
 
@@ -101,7 +101,7 @@ class Response
      */
     public function getStatus(): string
     {
-        return $this->code < 300
+        return $this->httpStatusCode < 300
             ? static::STATUS_SUCCESS
             : static::STATUS_ERROR;
     }
