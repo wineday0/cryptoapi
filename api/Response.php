@@ -8,7 +8,6 @@ namespace Main;
 class Response
 {
     public const STATUS_SUCCESS = 'success';
-
     public const STATUS_ERROR = 'error';
 
     /** @var int */
@@ -39,6 +38,7 @@ class Response
         $response = $this->getBaseResponse();
         $response['data'] = $this->data;
         unset($response['message']);
+
         return $this->getEncodeResponse($response);
     }
 

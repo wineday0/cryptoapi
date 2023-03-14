@@ -1,11 +1,11 @@
 <?php
 
-namespace Main\Token;
+namespace Main;
 
 /**
- * Class CheckToken
+ * Class Authorization
  */
-class CheckToken
+class Authorization
 {
     private const TOKEN = 'oFhN_7wC7RhgXW3jkpi-re2nWyI_EdhoM3oqtk-5vnO20maaQu-8Hhr-e1JaQHV';
 
@@ -44,7 +44,7 @@ class CheckToken
         $headers = $this->getAuthorizationHeader();
         if (!empty($headers)) {
             if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
-                return $matches[1] == static::getPublicToken();
+                return $matches[1];
             }
         }
         return false;
@@ -53,9 +53,9 @@ class CheckToken
     /**
      * @return bool
      */
-    public function checkToken(): bool
+    public function validate(): bool
     {
-        return $this->getBearerToken();
+        return $this->getBearerToken() == static::getPublicToken();
     }
 
     /**

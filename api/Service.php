@@ -1,13 +1,11 @@
 <?php
 
-namespace Main\BTCExchange;
-
-use Main\Response;
+namespace Main;
 
 /**
- * Class BtcExchangeRate
+ * Class Service
  */
-class BtcExchangeRate
+class Service
 {
     public const EXCHANGE_RATE_ALL = 'all';
     public const BTC_CURRENCY_CODE = 'BTC';
@@ -56,30 +54,30 @@ class BtcExchangeRate
     }
 
     /**
-     * @param $from
-     * @param $to
+     * @param $currencyFrom
+     * @param $currencyTo
      * @param $value
      * @return bool|string
      */
-    private function convert($from, $to, $value)
+    private function convert($currencyFrom, $currencyTo, $value)
     {
         $getData = $this->getData();
         foreach ($getData as $rate) {
-            if ($from != static::BTC_CURRENCY_CODE) {
-                if ($rate->symbol == $from) {
+            if ($currencyFrom != static::BTC_CURRENCY_CODE) {
+                if ($rate->symbol == $currencyFrom) {
                     $this->rates += [
-                        'currency_from' => $from,
-                        'currency_to' => $to,
+                        'currency_from' => $currencyFrom,
+                        'currency_to' => $currencyTo,
                         'value' => $value,
                         'converted_value' => round((float)$value / $rate->buy * static::FEE, 9),
                         'rate' => $this->getPreparedPurchasePrice($rate->buy)
                     ];
                 }
             } else {
-                if ($rate->symbol == $to) {
+                if ($rate->symbol == $currencyTo) {
                     $this->rates += [
-                        'currency_from' => $from,
-                        'currency_to' => $to,
+                        'currency_from' => $currencyFrom,
+                        'currency_to' => $currencyTo,
                         'value' => $value,
                         'converted_value' => round((float)$value * $rate->buy * static::FEE, 2),
                         'rate' => $this->getPreparedPurchasePrice($rate->buy)

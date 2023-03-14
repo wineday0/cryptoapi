@@ -2,9 +2,6 @@
 
 namespace Main;
 
-use Main\BTCExchange\BtcExchangeRate;
-use Main\Token\CheckToken;
-
 /**
  * Class Main
  */
@@ -24,17 +21,17 @@ class Main
      */
     public function run()
     {
-        $token = new CheckToken();
+        $token = new Authorization();
         $response = new Response();
         $invToken = $response->getResponseInvalidToken();
 
-        if (!$token->checkToken()) {
+        if (!$token->validate()) {
             return $invToken;
         }
 
         $invMethod = $response->getResponseMethodNotFound();
         $invValue = $response->getResponseInvalidValue();
-        $rate = new BtcExchangeRate();
+        $rate = new Service();
 
         switch ($_GET['method']) {
             case static::METHOD_RATES:
@@ -64,10 +61,10 @@ class Main
         $currency = trim($currency);
         if (
             empty($currency)
-            || $currency == BtcExchangeRate::EXCHANGE_RATE_ALL
+            || $currency == Service::EXCHANGE_RATE_ALL
             || strlen($currency) < 3
         ) {
-            return BtcExchangeRate::EXCHANGE_RATE_ALL;
+            return Service::EXCHANGE_RATE_ALL;
         }
         return strtoupper($currency);
     }
