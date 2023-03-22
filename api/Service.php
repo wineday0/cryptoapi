@@ -31,7 +31,7 @@ class Service
      * @param float $value
      * @return bool|string
      */
-    public function getConvert(string $currencyFrom, string $currencyTo, float $value)
+    public function getConvert(string $currencyFrom, string $currencyTo, float $value): bool|string
     {
         $this->convert($currencyFrom, $currencyTo, $value);
         return $this->getResponse();
@@ -64,18 +64,8 @@ class Service
     {
         $getData = $this->getData();
         foreach ($getData as $rate) {
-            if ($currencyFrom == static::BTC_CURRENCY_CODE
-                && $rate->symbol == $currencyTo) {
-                $this->rates += [
-                    'currency_from' => $currencyFrom,
-                    'currency_to' => $currencyTo,
-                    'value' => $value,
-                    'rate' => $this->getPreparedPurchasePrice($rate->buy),
-                    'converted_value' => $this->calculateValueFromCurrency($currencyFrom, $value, $rate->buy),
-                ];
-                continue;
-            }
-            if ($currencyFrom == $rate->symbol) {
+            if (($currencyFrom == static::BTC_CURRENCY_CODE && $rate->symbol == $currencyTo)
+                || $currencyFrom == $rate->symbol) {
                 $this->rates += [
                     'currency_from' => $currencyFrom,
                     'currency_to' => $currencyTo,
@@ -114,7 +104,7 @@ class Service
     {
         return match ($currency) {
             self::BTC_CURRENCY_CODE => round($value * $rateBuy * static::FEE, 2),
-            default => round($value / $rateBuy * static::FEE, 9),
+            default => round($value / ($rateBuy * static::FEE), 9),
         };
     }
 
