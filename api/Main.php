@@ -23,14 +23,10 @@ class Main
     {
         $token = new Authorization();
         $response = new Response();
-        $invToken = $response->getResponseInvalidToken();
 
         if (!$token->validate()) {
-            return $invToken;
+            return $response->getResponseInvalidToken();
         }
-
-        $invMethod = $response->getResponseMethodNotFound();
-        $invValue = $response->getResponseInvalidValue();
         $rate = new Service();
 
         switch ($_GET['method']) {
@@ -40,7 +36,7 @@ class Main
             case static::METHOD_CONVERT:
                 $requestedValue = (float)$_GET['value'];
                 if ($requestedValue < 0.01) {
-                    return $invValue;
+                    return $response->getResponseInvalidValue();
                 }
                 return $rate->getConvert(
                     strtoupper($_GET['currency_from']),
@@ -48,7 +44,7 @@ class Main
                     $requestedValue
                 );
             default:
-                return $invMethod;
+                return $response->getResponseMethodNotFound();
         }
     }
 

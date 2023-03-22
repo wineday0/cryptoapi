@@ -37,9 +37,9 @@ class Authorization
     }
 
     /**
-     * @return bool
+     * @return string|null
      */
-    private function getBearerToken(): bool
+    private function getBearerToken(): ?string
     {
         $headers = $this->getAuthorizationHeader();
         if (!empty($headers)) {
@@ -47,7 +47,7 @@ class Authorization
                 return $matches[1];
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -55,7 +55,7 @@ class Authorization
      */
     public function validate(): bool
     {
-        return $this->getBearerToken() == static::getPublicToken();
+        return $this->getBearerToken() === static::getPublicToken();
     }
 
     /**
